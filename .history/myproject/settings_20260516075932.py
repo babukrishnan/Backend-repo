@@ -33,10 +33,6 @@ ALLOWED_HOSTS = [
     ".railway.app",
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://backend-repo-production-5c16.up.railway.app/",
-]
-
 
 # Application definition
 
