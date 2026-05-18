@@ -13,7 +13,7 @@ class Product(models.Model):
     category = models.CharField(max_length=100, default='General')
     shop = models.CharField(max_length=200)
     phone = models.CharField(max_length=20)
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True
     )

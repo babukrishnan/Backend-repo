@@ -3,10 +3,10 @@ from .productModel import Product
 from .profileModel import FarmerProfile
 
 class ProductSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
     class Meta:
         model = Product
         fields = '__all__'
-        image = serializers.ImageField(required=False)
         read_only_fields = ['farmer', 'created_at']
 
 

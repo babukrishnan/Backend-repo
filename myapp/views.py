@@ -92,9 +92,15 @@ def product_detail(request, id):
                 status=status.HTTP_403_FORBIDDEN
             )
 
+        data = request.data.copy()
+         
+        # Remove empty image field
+        if 'image' in data and data['image'] == '':
+            data.pop('image')
+
         serializer = ProductSerializer(
             product,
-            data=request.data,
+            data=data,
             partial=True
         )
 
