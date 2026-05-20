@@ -1,4 +1,5 @@
-import random
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 from django.contrib.auth.models import User
 
@@ -7,65 +8,45 @@ from rest_framework.response import Response
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .otpModel import OTP
 from .profileModel import FarmerProfile
 
 @api_view(['POST'])
-def send_otp(request):
+def firebase_login(request):
 
-    phone = request.data.get('phone')
+    id_token = request.data.get('idToken')
 
-    otp = str(random.randint(100000, 999999))
+    try:
+        # Verify Google Token
+        idinfo = id_token.verify_oauth2_token(
+            token,
+            requests.Request()
+        )
+        email = idinfo['email']
+        name = idinfo.get('name', '')
 
-    OTP.objects.create(
-        phone=phone,
-        otp=otp
-    )
+        # Create User
+        user, created = User.objects.get_or_create(
+                username=email,
+                defaults={
+                    'email': email,
+                    'first_name': name,
+                }
+        )
 
-    print('OTP:', otp)
+        # Check Profile
+        profile_exists = FarmerProfile.objects.filter(
+                user=user,
+                is_completed=True
+            ).exists()
 
-    return Response({
-        'message': 'OTP sent'
-    })
+        refresh = RefreshToken.for_user(user)
 
-@api_view(['POST'])
-def verify_otp(request):
-
-    phone = request.data.get('phone')
-    otp = request.data.get('otp')
-
-    otp_obj = OTP.objects.filter(
-        phone=phone,
-        otp=otp
-    ).last()
-
-    if not otp_obj:
         return Response({
-            'error': 'Invalid OTP'
-        }, status=400)
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'is_new_user': not profile_exists,
+        })
 
-    # OPTIONAL: delete OTP after use (security)
-    OTP.objects.filter(phone=phone).delete()
+    except Exception as e:
 
-    # CREATE USER IF NOT EXISTS
-    user, created = User.objects.get_or_create(
-        username=phone
-    )
-
-    if created:
-        user.set_password(phone)
-        user.save()
-
-    # CREATE PROFILE IF NOT EXISTS
-    profile_exists = FarmerProfile.objects.filter(
-        user=user,
-        is_completed=True
-    ).exists()
-
-    refresh = RefreshToken.for_user(user)
-
-    return Response({
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-        'is_new_user': not profile_exists
-    })
+        return Response({ 'error': str(e) }, status=400)
