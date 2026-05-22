@@ -109,19 +109,19 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'farmerdb',
-        'USER': 'postgres',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-    #  'default': dj_database_url.config(
-    #     default=os.environ.get("DATABASE_URL"),
-    #     conn_max_age=600,
-    #     ssl_require=True
-    # )
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'farmerdb',
+    #     'USER': 'postgres',
+    #     'PASSWORD': '123456',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
+     'default': dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 
