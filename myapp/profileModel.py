@@ -12,7 +12,7 @@ class FarmerProfile(models.Model):
 
     phone = models.CharField(
         max_length=20,
-        unique=True
+        # unique=True
     )
 
     village = models.CharField(max_length=200)
