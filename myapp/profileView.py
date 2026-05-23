@@ -76,10 +76,41 @@ def create_profile(request):
         user=user
     )
 
+    # REQUIRED FIELDS
+
+    name = request.data.get('name')
+    phone = request.data.get('phone')
+    village = request.data.get('village')
+    district = request.data.get('district')
+
+    # VALIDATION
+
+    if not name or not phone or not village or not district:
+
+        return Response({
+            'error': 'All required fields must be filled'
+        }, status=400)
+
+    # CHECK DUPLICATE PHONE
+
+    phone_exists = FarmerProfile.objects.filter(
+        phone=phone
+    ).exclude(
+        user=user
+    ).exists()
+
+    if phone_exists:
+
+        return Response({
+            'error': 'Phone number already exists'
+        }, status=400)
+
     # Get data from frontend
-    profile.name = request.data.get('name')
-    profile.village = request.data.get('village')
-    profile.district = request.data.get('district')
+    profile.name = name
+    profile.phone = phone
+    profile.village = village
+    profile.district = district
+
     profile.farming = request.data.get('farming')
     profile.land_size = request.data.get('land_size')
 
@@ -94,6 +125,6 @@ def create_profile(request):
 
     profile.save()
 
-    return Response({
-        'message': 'Profile completed successfully'
-    })
+    serializer = FarmerProfileSerializer(profile)
+
+    return Response(serializer.data)
