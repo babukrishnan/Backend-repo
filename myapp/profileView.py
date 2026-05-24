@@ -8,9 +8,12 @@ from django.contrib.auth.models import User
 
 from .profileModel import FarmerProfile
 from .serializers import FarmerProfileSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import parser_classes
 
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def profile_detail(request):
 
     print(request.data)

@@ -5,6 +5,8 @@ from rest_framework import status
 
 from .productModel import Product
 from .serializers import ProductSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import parser_classes
 
 #test 
 def home(request):
@@ -12,6 +14,7 @@ def home(request):
     
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
+@parser_classes([MultiPartParser, FormParser])
 def get_products(request):
 
     # GET PRODUCTS
@@ -54,6 +57,7 @@ def get_products(request):
 # ====================================
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
+@parser_classes([MultiPartParser, FormParser])
 def product_detail(request, id):
 
     try:
