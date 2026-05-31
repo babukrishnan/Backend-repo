@@ -29,13 +29,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-local-dev-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-    ".railway.app",
+    "backend-repo-production-5c16.up.railway.app",
     "127.0.0.1",
     "localhost",
-    "*"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
