@@ -3,6 +3,7 @@ from .views import get_products, product_detail, my_products
 from .profileView import create_profile, profile_detail
 from .authView import signup, login
 from .marketplace_views import orders, notifications
+from .order_status import update_order_status
 
 urlpatterns = [
     path('products/',get_products),
@@ -14,4 +15,5 @@ urlpatterns = [
     path('login/',login),
     path('orders/',orders),
     path('notifications/',notifications),
+    path('orders/<int:id>/status/',update_order_status),
 ]
