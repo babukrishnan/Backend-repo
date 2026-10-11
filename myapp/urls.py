@@ -1,14 +1,19 @@
 from django.urls import path
 from .views import get_products, product_detail, my_products
-from .profileView import  create_profile, profile_detail
+from .profileView import create_profile, profile_detail
 from .authView import signup, login
+from .marketplace_views import orders, notifications
+from .order_status import update_order_status
 
 urlpatterns = [
-    path('products/', get_products),
-    path('products/<int:id>/', product_detail),
-    path('profile/', profile_detail),
-    path('create-profile/', create_profile),
-    path('my-products/', my_products),
-    path('signup/', signup),
-    path('login/', login),
+    path('products/',get_products),
+    path('products/<int:id>/',product_detail),
+    path('profile/',profile_detail),
+    path('create-profile/',create_profile),
+    path('my-products/',my_products),
+    path('signup/',signup),
+    path('login/',login),
+    path('orders/',orders),
+    path('notifications/',notifications),
+    path('orders/<int:id>/status/',update_order_status),
 ]
